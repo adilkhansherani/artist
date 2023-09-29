@@ -13,7 +13,6 @@ from rest_framework import status
 from .serializers import UserRegisterSerializer
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from .models import Work
 
 from .models import Artist,Work
 from .serializers import ArtistSerializer,WorkSerializer,UserSerializer
@@ -50,9 +49,6 @@ class UserRegistrationView(generics.CreateAPIView):
 
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-#class ArtistViewSet(viewsets.ModelViewSet):
-#    queryset = Artist.objects.all()
-#    serializer_class = ArtistSerializer
 def get_artist_by_id(request, artist_id):
     try:
         artist_object = get_object_or_404(Artist, id=artist_id)
@@ -61,7 +57,6 @@ def get_artist_by_id(request, artist_id):
             'id': artist_object.id,  
             'name': artist_object.name,
             'user_id': artist_object.user_id,
-            'work_id': list(artist_object.work.values_list('id', flat=True)),
             # Add other fields as needed
         }
         return JsonResponse(data)
@@ -72,15 +67,6 @@ def get_artist_by_id(request, artist_id):
 
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-#class WorkViewSet(viewsets.ModelViewSet):
-#def WorkViewSet(request):
-##    queryset = Work.objects.complex_filter({"id":1})
-#    serializer_class = WorkSerializer
-#    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-#    search_fields = ['work_id']  # Search works by artist name
-#    ordering_fields = ['work_type']    # Order works by work_type
-
-
 def get_work_by_id(request, work_id):
     try:
         work_object = get_object_or_404(Work, id=work_id)
@@ -89,9 +75,39 @@ def get_work_by_id(request, work_id):
             'id': work_object.id,  
             'link': work_object.link,
             'type': work_object.work_type,
+            'artist_id': list(work_object.artist.values_list('id', flat=True)),
             # Add other fields as needed
         }
         return JsonResponse(data)
     except Exception as e:
         # Handle exceptions, such as Work.DoesNotExist
         return JsonResponse({'error': str(e)}, status=404)
+
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def filter_works_by_artist(request):
+    artist_name = request.GET.get('artist')
+    if artist_name:
+        filtered_works = Work.objects.filter(artist__name=artist_name)
+        # You can serialize the filtered_works if needed
+        data = {
+            'results': [work.serialize() for work in filtered_works],
+        }
+        return JsonResponse(data)
+    else:
+        return JsonResponse({'error': 'Missing artist parameter'}, status=400)
+    
+
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def filter_works_by_work_type(request):
+    work_type = request.GET.get('work_type')
+    if work_type:
+        filtered_works = Work.objects.filter(work_type=work_type)
+        # You can serialize the filtered_works if needed
+        data = {
+            'results': [work.serialize() for work in filtered_works],
+        }
+        return JsonResponse(data)
+    else:
+        return JsonResponse({'error': 'Missing work_type parameter'}, status=400)

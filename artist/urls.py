@@ -32,4 +32,6 @@ urlpatterns = [
     path('api/login/', views.obtain_auth_token, name='login'),
     path('api/works/<int:work_id>/', views.get_work_by_id, name='works'),
     path('api/artists/<int:artist_id>/', views.get_artist_by_id, name='artists'),
+    path('api/works/', views.filter_works_by_work_type, name='filter_works_by_work_type'),
+    path('api/works/artist/', views.filter_works_by_artist, name='filter_works_by_artist'),
 ]
