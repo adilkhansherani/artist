@@ -1,0 +1,268 @@
+# Artist API Documentation
+
+This document provides information on how to use the Artist API for managing artists and their works.
+
+## Authentication
+
+All endpoints in this API require authentication using a token.
+ To obtain a token, you need to register an account and use the token in the `Authorization` header of your requests.
+
+### Register a User (POST)
+
+**Endpoint:** `/api/register/`
+
+**Description:** Register a new user account.
+
+**Request:**
+```json
+{
+  "username": "your_username",
+  "password": "your_password",
+  "email": "your_email@example.com",
+  "first_name": "Your",
+  "last_name": "Name"
+}
+```
+
+**Response (Success):**
+```json
+{
+  "message": "User registered successfully."
+}
+```
+
+**Response (Error):**
+```json
+{
+  "error": "Error message."
+}
+```
+
+### Obtain an Authentication Token (POST)
+
+**Endpoint:** `/api/login/`
+
+**Description:** Get an authentication token for an existing user.
+
+**Request:**
+```json
+{
+  "username": "your_username",
+  "password": "your_password"
+}
+```
+
+**Response (Success):**
+```json
+{
+  "token": "your_authentication_token"
+}
+```
+
+**Response (Error):**
+```json
+{
+  "error": "Invalid credentials"
+}
+```
+
+## Artists
+
+### Create a New Artist (POST)
+
+**Endpoint:** `/api/artists/`
+
+**Description:** Create a new artist profile.
+
+**Request:**
+```json
+{
+  "name": "Artist Name"
+}
+```
+
+**Response (Success):**
+```json
+{
+  "id": 1,
+  "name": "Artist Name"
+}
+```
+
+**Response (Error):**
+```json
+{
+  "error": "Error message."
+}
+```
+
+### Retrieve Artist Details (GET)
+
+**Endpoint:** `/api/artists/{artist_id}/`
+
+**Description:** Retrieve details of a specific artist by ID.
+
+**Response (Success):**
+```json
+{
+  "id": 1,
+  "name": "Artist Name"
+}
+```
+
+**Response (Error):**
+```json
+{
+  "error": "Artist not found."
+}
+```
+
+### Update Artist Details (PUT)
+
+**Endpoint:** `/api/artists/{artist_id}/`
+
+**Description:** Update details of a specific artist by ID.
+
+**Request:**
+```json
+{
+  "name": "Updated Artist Name"
+}
+```
+
+**Response (Success):**
+```json
+{
+  "id": 1,
+  "name": "Updated Artist Name"
+}
+```
+
+**Response (Error):**
+```json
+{
+  "error": "Artist not found."
+}
+```
+
+### Delete an Artist (DELETE)
+
+**Endpoint:** `/api/artists/{artist_id}/`
+
+**Description:** Delete a specific artist by ID.
+
+**Response (Success):**
+```json
+{
+  "message": "Artist deleted successfully."
+}
+```
+
+**Response (Error):**
+```json
+{
+  "error": "Artist not found."
+}
+```
+
+## Works
+
+### Create a New Work (POST)
+
+**Endpoint:** `/api/works/`
+
+**Description:** Create a new work associated with an artist.
+
+**Request:**
+```json
+{
+  "link": "Work Link",
+  "work_type": "YT" // Choose from 'YT', 'IG', 'Other'
+}
+```
+
+**Response (Success):**
+```json
+{
+  "id": 1,
+  "link": "Work Link",
+  "work_type": "YT"
+}
+```
+
+**Response (Error):**
+```json
+{
+  "error": "Error message."
+}
+```
+
+### Retrieve All Works (GET)
+
+**Endpoint:** `/api/works/`
+
+**Description:** Retrieve a list of all works.
+
+**Response (Success):**
+```json
+[
+  {
+    "id": 1,
+    "link": "Work Link 1",
+    "work_type": "YT"
+  },
+  {
+    "id": 2,
+    "link": "Work Link 2",
+    "work_type": "IG"
+  }
+]
+```
+
+### Filter Works by Work Type (GET)
+
+**Endpoint:** `/api/works/?work_type={work_type}`
+
+**Description:** Filter works by work type (e.g., 'YT' for YouTube, 'IG' for Instagram).
+
+**Response (Success):**
+json
+[
+  {
+    "id": 1,
+    "link": "Work Link 1",
+    "work_type": "YT"
+  }
+]
+
+
+**Response (Error):**
+json
+{
+  "error": "No works found with this work type."
+}
+
+
+### Search Works by Artist Name (GET)
+
+**Endpoint:** `/api/works/?artist={artist_name}`
+
+**Description:** Search for works by artist name.
+
+**Response (Success):**
+json
+[
+  {
+    "id": 1,
+    "link": "Work Link",
+    "work_type": "YT"
+  }
+]
+
+**Response (Error):**
+json
+{
+  "error": "No works found for this artist."
+}
+
+This documentation provides an overview of how to use each API endpoint, including request examples and expected responses.

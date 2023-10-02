@@ -30,8 +30,11 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/register/', views.UserRegistrationView.as_view (), name='register'),
     path('api/login/', views.obtain_auth_token, name='login'),
-    path('api/works/<int:work_id>/', views.get_work_by_id, name='works'),
-    path('api/artists/<int:artist_id>/', views.get_artist_by_id, name='artists'),
     path('api/works/', views.filter_works_by_work_type, name='filter_works_by_work_type'),
     path('api/works/artist/', views.filter_works_by_artist, name='filter_works_by_artist'),
+    path('api/artists/', views.ArtistListCreateView.as_view(), name='artist-list-create'),
+    path('api/artists/<int:pk>/', views.ArtistDetailView.as_view(), name='artist-detail'),
+    path('api/works/', views.WorkListCreateView.as_view(), name='work-list-create'),
+    path('api/works/<int:pk>/', views.WorkDetailView.as_view(), name='work-detail'),
+
 ]

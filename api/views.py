@@ -49,42 +49,6 @@ class UserRegistrationView(generics.CreateAPIView):
 
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def get_artist_by_id(request, artist_id):
-    try:
-        artist_object = get_object_or_404(Artist, id=artist_id)
-        # Now, work_object contains the object with the specified ID
-        data = {
-            'id': artist_object.id,  
-            'name': artist_object.name,
-            'user_id': artist_object.user_id,
-            # Add other fields as needed
-        }
-        return JsonResponse(data)
-    except Exception as e:
-        # Handle exceptions, such as Work.DoesNotExist
-        return JsonResponse({'error': str(e)}, status=404)
-
-
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def get_work_by_id(request, work_id):
-    try:
-        work_object = get_object_or_404(Work, id=work_id)
-        # Now, work_object contains the object with the specified ID
-        data = {
-            'id': work_object.id,  
-            'link': work_object.link,
-            'type': work_object.work_type,
-            'artist_id': list(work_object.artist.values_list('id', flat=True)),
-            # Add other fields as needed
-        }
-        return JsonResponse(data)
-    except Exception as e:
-        # Handle exceptions, such as Work.DoesNotExist
-        return JsonResponse({'error': str(e)}, status=404)
-
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
 def filter_works_by_artist(request):
     artist_name = request.GET.get('artist')
     if artist_name:
@@ -111,3 +75,27 @@ def filter_works_by_work_type(request):
         return JsonResponse(data)
     else:
         return JsonResponse({'error': 'Missing work_type parameter'}, status=400)
+    
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+class ArtistListCreateView(generics.ListCreateAPIView):
+    queryset = Artist.objects.all()
+    serializer_class = ArtistSerializer
+
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+class ArtistDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Artist.objects.all()
+    serializer_class = ArtistSerializer
+
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+class WorkListCreateView(generics.ListCreateAPIView):
+    queryset = Work.objects.all()
+    serializer_class = WorkSerializer
+
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+class WorkDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Work.objects.all()
+    serializer_class = WorkSerializer
