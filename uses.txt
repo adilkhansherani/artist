@@ -6,6 +6,7 @@ This document provides information on how to use the Artist API for managing art
 
 All endpoints in this API require authentication using a token.
  To obtain a token, you need to register an account and use the token in the `Authorization` header of your requests.
+ To use token, pass it in header of request as Authorization = Token "your token string"
 
 ### Register a User (POST)
 
@@ -265,4 +266,5 @@ json
   "error": "No works found for this artist."
 }
 
-This documentation provides an overview of how to use each API endpoint, including request examples and expected responses.
+This documentation provides an overview of how to use each API endpoint,
+ including request examples and expected responses.
